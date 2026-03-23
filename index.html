@@ -1436,7 +1436,7 @@ async function buscar() {
   btn.textContent = 'Verificar disponibilidad';
   btn.disabled = false;
 
-  const noches = Math.round((new Date(egreso) - new Date(ingreso)) / 86400000);
+  const noches = Math.round((new Date(egreso + 'T12:00:00') - new Date(ingreso + 'T12:00:00')) / 86400000);
   const formatFecha = f => new Date(f + 'T12:00:00').toLocaleDateString('es-AR', {day:'numeric', month:'long'});
 
   // Filtrar por capacidad y disponibilidad
