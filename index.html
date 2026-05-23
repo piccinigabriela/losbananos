@@ -661,7 +661,7 @@ const ud=()=>{for(let i=0;i<4;i++)document.getElementById('dot-'+i).classList.to
 function pinPress(n){if(pb.length>=4)return;pb+=n;ud();if(pb.length===4)setTimeout(pinEnter,200);}
 function pinClear(){pb=pb.slice(0,-1);ud();}
 function pinEnter(){
-  pins=lo('bn_p',{...DEFAULT_PINS});
+  pins={...DEFAULT_PINS,...lo('bn_p',{})};// merge: defaults para roles nuevos, localStorage para los existentes
   const m=Object.entries(pins).find(([,p])=>p===pb);
   if(m){cu=m[0];document.getElementById('login-error').textContent='';sessionStorage.setItem('bn_cu',cu);loginOk();}
   else{document.getElementById('login-error').textContent='PIN incorrecto';pb='';ud();setTimeout(()=>document.getElementById('login-error').textContent='',2000);}
@@ -1148,7 +1148,7 @@ function toggleLimpio(id){
 }
 
 function renderConfig(){
-  pins=lo('bn_p',{...DEFAULT_PINS});
+  pins={...DEFAULT_PINS,...lo('bn_p',{})};// merge para incluir roles nuevos
   const us=[{k:'admin',n:'Admin (tu hermano)',d:'Acceso total'},{k:'gabi',n:'Gabi',d:'Acceso total'},{k:'vol',n:'Voluntario',d:'Solo ocupación y avisos · sin datos de dinero'}];
   document.getElementById('pin-settings-grid').innerHTML=us.map(u=>`<div class="pin-user-card"><h4>${u.n}</h4><p>${u.d}</p><div class="pin-input-row"><input type="password" id="pi-${u.k}" value="${pins[u.k]||''}" maxlength="4" placeholder="••••"><button class="btn btn-outline btn-sm" onclick="tp('${u.k}')">👁</button></div></div>`).join('');
   const wa=lo('bn_wa',{admin:''});
