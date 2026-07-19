@@ -4,13 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wood Cabin Iguazú · Los Bananos</title>
+<meta name="description" content="Cabañas de madera en Puerto Iguazú, a 30 minutos de las Cataratas. Piscina, parrilla, jardín selvático. Tiny y Big Wood Cabin. 9,6 en Booking.com.">
+<meta property="og:title" content="Wood Cabin Iguazú · Los Bananos">
+<meta property="og:description" content="Cabañas de madera en la selva de Puerto Iguazú, a 30 minutos de las Cataratas del Iguazú.">
+<meta property="og:type" content="lodging">
+<meta property="og:image" content="img/cataratas.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --verde: #2d4a2d;
-    --verde-claro: #4a7c4a;
-    --selva: #1a3320;
+    --verde: #1f3a35;
+    --verde-claro: #3c6058;
+    --selva: #0f201d;
     --tierra: #8b6914;
     --crema: #f5f0e8;
     --crema-oscura: #e8e0d0;
@@ -54,24 +59,6 @@
   @keyframes breathe {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.7; }
-  }
-
-  /* Leaves decorativas */
-  .leaf {
-    position: absolute;
-    opacity: 0.08;
-    font-size: 8rem;
-    animation: sway 6s ease-in-out infinite;
-  }
-  .leaf:nth-child(1) { top: 5%; left: 3%; animation-delay: 0s; font-size: 6rem; }
-  .leaf:nth-child(2) { top: 15%; right: 5%; animation-delay: 1.5s; font-size: 10rem; }
-  .leaf:nth-child(3) { bottom: 20%; left: 8%; animation-delay: 3s; font-size: 7rem; }
-  .leaf:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 4.5s; font-size: 9rem; }
-  .leaf:nth-child(5) { top: 40%; left: 0%; animation-delay: 2s; font-size: 5rem; }
-
-  @keyframes sway {
-    0%, 100% { transform: rotate(-5deg) translateY(0); }
-    50% { transform: rotate(5deg) translateY(-10px); }
   }
 
   .hero-content {
@@ -391,7 +378,7 @@
   .sin-resultados {
     text-align: center;
     padding: 2rem;
-    color: rgba(26,42,26,0.5);
+    color: rgba(26,42,26,0.6);
     font-style: italic;
     font-size: 1.1rem;
   }
@@ -532,9 +519,11 @@
   }
 
   .comodidad-icono {
-    font-size: 2rem;
+    font-size: 0.9rem;
     margin-bottom: 0.8rem;
     display: block;
+    color: var(--acento);
+    letter-spacing: 0.3em;
   }
 
   .comodidad-nombre {
@@ -789,7 +778,7 @@
     font-family: 'DM Mono', monospace;
     font-size: 0.6rem;
     letter-spacing: 0.2em;
-    color: rgba(26,42,26,0.4);
+    color: rgba(26,42,26,0.55);
     text-transform: uppercase;
   }
 
@@ -822,7 +811,7 @@
     font-family: 'DM Mono', monospace;
     font-size: 0.6rem;
     letter-spacing: 0.3em;
-    color: rgba(245,240,232,0.35);
+    color: rgba(245,240,232,0.5);
     text-transform: uppercase;
     margin-bottom: 2rem;
   }
@@ -848,7 +837,7 @@
 
   .footer-copy {
     font-size: 0.8rem;
-    color: rgba(245,240,232,0.2);
+    color: rgba(245,240,232,0.35);
   }
 
   /* ——— NAV ——— */
@@ -895,8 +884,120 @@
 
   .nav-links a:hover { color: var(--acento); }
 
+  .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 0.4rem; }
+  .nav-toggle span { display: block; width: 22px; height: 1px; background: var(--crema); margin: 5px 0; transition: 0.3s; }
+
+  .nav-links.open {
+    display: flex !important;
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    flex-direction: column;
+    background: rgba(26,51,32,0.97);
+    padding: 1.5rem 2rem;
+    gap: 1.2rem;
+  }
+
   @media (max-width: 600px) {
     .nav-links { display: none; }
+    .nav-toggle { display: block; }
+  }
+
+  /* ——— WHATSAPP FLOTANTE ——— */
+  .whatsapp-float {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 90;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #25D366;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    transition: transform 0.3s;
+  }
+  .whatsapp-float:hover { transform: scale(1.08); }
+
+  /* ——— FAQ ——— */
+  .faq-section {
+    padding: 6rem 2rem;
+    background: var(--crema);
+  }
+  .faq-list {
+    max-width: 700px;
+    margin: 3rem auto 0;
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--crema-oscura);
+  }
+  .faq-pregunta {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 1.3rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--selva);
+  }
+  .faq-pregunta .signo {
+    font-family: 'DM Mono', monospace;
+    color: var(--acento);
+    font-size: 1.2rem;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+  .faq-item.open .faq-pregunta .signo { transform: rotate(45deg); }
+  .faq-respuesta {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  .faq-respuesta p {
+    padding: 0 0 1.5rem;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(26,42,26,0.7);
+    font-style: italic;
+  }
+  .faq-item.open .faq-respuesta { max-height: 200px; }
+
+  /* ——— LIGHTBOX ——— */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(10,20,12,0.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 2rem;
+    cursor: zoom-out;
+  }
+  .lightbox.visible { display: flex; }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    color: var(--crema);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid rgba(245,240,232,0.3);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
   }
 
   /* ——— RESEÑAS ——— */
@@ -982,22 +1083,21 @@
 <!-- NAV -->
 <nav id="nav">
   <div class="nav-logo">Wood Cabin · <span>Los Bananos</span></div>
-  <ul class="nav-links">
+  <ul class="nav-links" id="nav-links">
     <li><a href="#buscar">Reservar</a></li>
     <li><a href="#cabanas">Cabañas</a></li>
     <li><a href="#comodidades">Comodidades</a></li>
+    <li><a href="#faq">Preguntas</a></li>
     <li><a href="#ubicacion">Ubicación</a></li>
   </ul>
+  <button class="nav-toggle" onclick="document.getElementById('nav-links').classList.toggle('open')" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-bg"></div>
-  <span class="leaf">🌿</span>
-  <span class="leaf">🍃</span>
-  <span class="leaf">🌿</span>
-  <span class="leaf">🍃</span>
-  <span class="leaf">🌱</span>
   <div class="hero-content">
     <p class="hero-eyebrow">Puerto Iguazú · Misiones · Argentina</p>
     <h1 class="hero-title">Wood Cabin<br><span>Iguazú</span></h1>
@@ -1008,6 +1108,9 @@
       <span class="award-sep"></span>
       <span class="award-num" style="font-size:2.2rem">4,8</span>
       <span class="award-text">Puntuación<br><span style="color:rgba(245,240,232,0.5)">Google · 132 reseñas</span></span>
+      <span class="award-sep"></span>
+      <span class="award-num" style="font-size:2.2rem">5,0</span>
+      <span class="award-text">Puntuación<br><span style="color:rgba(245,240,232,0.5)">Airbnb</span></span>
     </div>
     <a href="#buscar" class="hero-cta">Consultar disponibilidad</a>
   </div>
@@ -1108,36 +1211,36 @@
 
   <div class="comodidades-grid">
     <div class="comodidad">
-      <span class="comodidad-icono">🏊</span>
+      <span class="comodidad-icono">—</span>
       <p class="comodidad-nombre">Piscina exterior con pileta de inmersión</p>
     </div>
     <div class="comodidad">
-      <span class="comodidad-icono">🌿</span>
+      <span class="comodidad-icono">—</span>
       <p class="comodidad-nombre">Jardín selvático y espacio verde</p>
     </div>
     <div class="comodidad">
-      <span class="comodidad-icono">🔥</span>
+      <span class="comodidad-icono">—</span>
       <p class="comodidad-nombre">Parrilla / Barbacoa</p>
     </div>
 
     <div class="comodidad">
-      <span class="comodidad-icono">🚗</span>
+      <span class="comodidad-icono">—</span>
       <p class="comodidad-nombre">Estacionamiento privado</p>
     </div>
     <div class="comodidad">
-      <span class="comodidad-icono">🐾</span>
+      <span class="comodidad-icono">—</span>
       <p class="comodidad-nombre">Acepta mascotas</p>
     </div>
     <div class="comodidad">
-      <span class="comodidad-icono">📶</span>
+      <span class="comodidad-icono">—</span>
       <p class="comodidad-nombre">WiFi en todo el complejo</p>
     </div>
     <div class="comodidad">
-      <span class="comodidad-icono">🌡️</span>
+      <span class="comodidad-icono">—</span>
       <p class="comodidad-nombre">Aire acondicionado</p>
     </div>
     <div class="comodidad">
-      <span class="comodidad-icono">🍳</span>
+      <span class="comodidad-icono">—</span>
       <p class="comodidad-nombre">Cocina totalmente equipada</p>
     </div>
   </div>
@@ -1166,7 +1269,7 @@
     <video
       id="drone-video"
       src="video/dron.mp4"
-      poster=""
+      poster="img/dron-poster.jpg"
       playsinline
       loop
       muted
@@ -1185,36 +1288,41 @@
   <h2 class="section-title">El entorno <em>natural</em></h2>
 
   <div class="galeria-grid">
-    <div class="galeria-item">
+    <div class="galeria-item" onclick="abrirLightbox('img/sendero-noche.jpg')">
       <img src="img/sendero-noche.jpg" alt="Sendero nocturno" style="width:100%;height:100%;object-fit:cover;display:block;">
       <div class="galeria-overlay"></div>
     </div>
-    <div class="galeria-item">
+    <div class="galeria-item" onclick="abrirLightbox('img/piscina.jpg')">
       <img src="img/piscina.jpg" alt="Piscina" style="width:100%;height:100%;object-fit:cover;display:block;">
       <div class="galeria-overlay"></div>
     </div>
-    <div class="galeria-item">
+    <div class="galeria-item" onclick="abrirLightbox('img/cabana-hamaca.jpg')">
       <img src="img/cabana-hamaca.jpg" alt="Cabaña con hamaca" style="width:100%;height:100%;object-fit:cover;display:block;">
       <div class="galeria-overlay"></div>
     </div>
-    <div class="galeria-item">
+    <div class="galeria-item" onclick="abrirLightbox('img/cabana-terraza.jpg')">
       <img src="img/cabana-terraza.jpg" alt="Terraza cabaña" style="width:100%;height:100%;object-fit:cover;display:block;">
       <div class="galeria-overlay"></div>
     </div>
-    <div class="galeria-item">
+    <div class="galeria-item" onclick="abrirLightbox('img/jardin-heliconia.jpg')">
       <img src="img/jardin-heliconia.jpg" alt="Jardín heliconias" style="width:100%;height:100%;object-fit:cover;display:block;">
       <div class="galeria-overlay"></div>
     </div>
-    <div class="galeria-item">
+    <div class="galeria-item" onclick="abrirLightbox('img/mate-jardin.jpg')">
       <img src="img/mate-jardin.jpg" alt="Mate en el jardín" style="width:100%;height:100%;object-fit:cover;display:block;">
       <div class="galeria-overlay"></div>
     </div>
-    <div class="galeria-item">
+    <div class="galeria-item" onclick="abrirLightbox('img/deck-hamaca.jpg')">
       <img src="img/deck-hamaca.jpg" alt="Deck con hamaca" style="width:100%;height:100%;object-fit:cover;display:block;">
       <div class="galeria-overlay"></div>
     </div>
   </div>
 </section>
+
+<div class="lightbox" id="lightbox" onclick="cerrarLightbox()">
+  <button class="lightbox-close">Cerrar ✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
 
 <!-- RESEÑAS -->
 <section class="resenas-section">
@@ -1287,6 +1395,30 @@
   </div>
 </section>
 
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <p class="section-label">Antes de reservar</p>
+  <h2 class="section-title">Preguntas <em>frecuentes</em></h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-pregunta" onclick="toggleFaq(this)">¿Cuáles son los horarios de check-in y check-out?<span class="signo">+</span></button>
+      <div class="faq-respuesta"><p>Check-in desde las 14:00 y check-out hasta las 11:00.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-pregunta" onclick="toggleFaq(this)">¿Aceptan mascotas?<span class="signo">+</span></button>
+      <div class="faq-respuesta"><p>Sí, el complejo acepta mascotas. Contános por WhatsApp para coordinar los detalles.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-pregunta" onclick="toggleFaq(this)">¿Cómo se reserva y se paga?<span class="signo">+</span></button>
+      <div class="faq-respuesta"><p>Consultás disponibilidad acá arriba y coordinás por WhatsApp con Fernando. Se reserva con el 50% de seña y el 50% restante se abona al llegar y alojarse.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-pregunta" onclick="toggleFaq(this)">¿Cuál es la política de cancelación?<span class="signo">+</span></button>
+      <div class="faq-respuesta"><p>Política moderada (criterio Airbnb): cancelación sin costo hasta 5 días antes del arribo. Dentro de los 5 días previos, se retiene el 50%.</p></div>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">Wood Cabin · <span>Iguazú</span></div>
@@ -1300,7 +1432,46 @@
   <p class="footer-copy">© 2025 Wood Cabin Iguazú · Los Bananos</p>
 </footer>
 
+<a href="https://wa.me/5493757558957?text=Hola!%20Quisiera%20consultar%20sobre%20Wood%20Cabin%20Iguaz%C3%BA" class="whatsapp-float" target="_blank" aria-label="WhatsApp">
+  <svg width="28" height="28" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LodgingBusiness",
+  "name": "Wood Cabin Iguazú · Los Bananos",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Av. Los Pioneros 730",
+    "addressLocality": "Puerto Iguazú",
+    "addressRegion": "Misiones",
+    "addressCountry": "AR"
+  },
+  "telephone": "+5493757558957",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "132"
+  }
+}
+</script>
+
 <script>
+// ——— FAQ ———
+function toggleFaq(btn) {
+  btn.parentElement.classList.toggle('open');
+}
+
+// ——— Lightbox ———
+function abrirLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('visible');
+}
+function cerrarLightbox() {
+  document.getElementById('lightbox').classList.remove('visible');
+}
+
 // ——— Video dron ———
 function playVideo() {
   const video = document.getElementById('drone-video');
