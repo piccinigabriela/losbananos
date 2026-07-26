@@ -78,6 +78,17 @@
   }
   .direccion-card b{color:var(--dorado-suave);}
 
+  .tip-card{
+    background:#fff;border-left:3px solid var(--dorado);border-radius:var(--radio);
+    padding:14px 16px;margin-bottom:20px;box-shadow:0 1px 2px rgba(18,32,25,0.05);
+    display:flex;gap:12px;align-items:flex-start;
+  }
+  .tip-card .ticket-icon{margin-top:1px;}
+  .tip-card h3{margin:0 0 4px;font-size:14px;font-family:'Inter',sans-serif;font-weight:600;color:var(--verde-900);}
+  .tip-card p{margin:0 0 4px;font-size:13px;line-height:1.5;opacity:0.78;}
+  .tip-card p:last-child{margin-bottom:0;}
+  .tip-card b{color:var(--verde-700);}
+
   /* CHECK IN/OUT */
   .horarios{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;}
   .horario-card{
@@ -163,6 +174,15 @@
         <div class="horario-card"><span class="kicker">Check-out</span><span class="big">11 hs</span></div>
       </div>
     </section>
+
+    <div class="tip-card">
+      <div class="ticket-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M12 7v6M9 10l3-3 3 3"/></svg></div>
+      <div>
+        <h3>Guardá esta guía en tu pantalla de inicio</h3>
+        <p><b>iPhone:</b> tocá el ícono de compartir (⬆) en el navegador y elegí "Agregar a pantalla de inicio".</p>
+        <p><b>Android:</b> tocá el menú (⋮) en Chrome y elegí "Agregar a pantalla de inicio" o "Instalar app".</p>
+      </div>
+    </div>
 
     <nav class="tabs">
       <button class="tab-btn active" data-tab="llegar">Cómo llegar</button>
