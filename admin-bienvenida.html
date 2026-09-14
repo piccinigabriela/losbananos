@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editar guía de bienvenida</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --coral:#FF6F59; --menta:#AEBF92; --carbon:#201E1D; --cream:#FBF7F0;
+  }
+  *{box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--cream);color:var(--carbon);margin:0;padding:24px}
+  .wrap{max-width:640px;margin:0 auto}
+  h1{font-size:1.4rem;margin-bottom:4px}
+  .sub{color:#777;margin-bottom:24px}
+  label{display:block;font-weight:600;font-size:.85rem;margin:16px 0 4px}
+  input,textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:.95rem;font-family:inherit}
+  textarea{min-height:70px;resize:vertical}
+  fieldset{border:1px solid #e5ddd0;border-radius:12px;padding:16px;margin:20px 0}
+  legend{font-weight:700;padding:0 6px}
+  .atraccion-row,.comer-row{border:1px dashed #ddd;border-radius:8px;padding:12px;margin-bottom:10px;position:relative}
+  .btn{background:var(--coral);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-weight:600;cursor:pointer;font-size:.9rem}
+  .btn:hover{background:#D9553F}
+  .btn-secundario{background:#fff;color:var(--carbon);border:1px solid #ccc}
+  .btn-eliminar{background:none;color:#c0392b;border:none;position:absolute;top:8px;right:8px;cursor:pointer;font-size:.8rem}
+  #login-box{max-width:340px;margin:80px auto;text-align:center}
+  #app{display:none}
+  .msg{padding:10px;border-radius:8px;margin-top:16px;font-size:.9rem}
+  .msg.ok{background:#e7efdc;color:#3f5a2c}
+  .msg.err{background:#fbe4e0;color:#a83226}
+  .fila-doble{display:flex;gap:10px}
+  .fila-doble>div{flex:1}
+  .wifi-toggle{display:flex;align-items:center;gap:8px;margin-top:10px}
+</style>
+</head>
+<body>
+
+<div id="login-box">
+  <h1>Editar guía de bienvenida</h1>
+  <p class="sub">Ingresá tu código de acceso</p>
+  <input type="text" id="token-input" placeholder="Código">
+  <br><br>
+  <button class="btn" onclick="iniciarSesion()">Entrar</button>
+  <p id="login-error" class="msg err" style="display:none"></p>
+</div>
+
+<div id="app" class="wrap">
+  <h1 id="titulo-cliente">Guía de bienvenida</h1>
+  <p class="sub">Los cambios se guardan directo online. El huésped los ve al instante.</p>
+
+  <fieldset>
+    <legend>Cómo llegar</legend>
+    <label>Dirección</label>
+    <textarea id="direccion"></textarea>
+    <label>Indicaciones en auto</label>
+    <textarea id="auto"></textarea>
+    <div class="fila-doble">
+      <div>
+        <label>Precio bus público ($)</label>
+        <input type="number" id="bus-precio">
+      </div>
+      <div>
+        <label>Detalle del bus</label>
+        <input type="text" id="bus-detalle">
+      </div>
+    </div>
+    <label>Uber / remis</label>
+    <textarea id="uber-remis"></textarea>
+  </fieldset>
+
+  <fieldset>
+    <legend>Atracciones</legend>
+    <div id="atracciones-lista"></div>
+    <button class="btn btn-secundario" onclick="agregarAtraccion()">+ Agregar atracción</button>
+  </fieldset>
+
+  <fieldset>
+    <legend>Dónde comer</legend>
+    <div id="comer-lista"></div>
+    <button class="btn btn-secundario" onclick="agregarComer()">+ Agregar lugar</button>
+  </fieldset>
+
+  <fieldset>
+    <legend>WiFi</legend>
+    <div class="fila-doble">
+      <div><label>Red</label><input type="text" id="wifi-red"></div>
+      <div><label>Clave</label><input type="text" id="wifi-clave"></div>
+    </div>
+    <div class="wifi-toggle">
+      <input type="checkbox" id="wifi-activo">
+      <label style="margin:0">Mostrar WiFi en la guía</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Servicios (uno por línea)</legend>
+    <textarea id="servicios"></textarea>
+  </fieldset>
+
+  <button class="btn" onclick="guardar()">Guardar cambios</button>
+  <p id="save-msg" class="msg" style="display:none"></p>
+</div>
+
+<script>
+// ---- CONFIG: completar con los datos reales del proyecto ----
+const SUPABASE_URL = "https://vnfgitgadadjjjciftsa.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_IKbP0ieyJfrtdguY39N7wg_RMjN_CxH";
+// ---------------------------------------------------------------
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let registro = null; // fila actual de guias_bienvenida
+
+function idAtraccion(){ return 'a' + Math.random().toString(36).slice(2,9); }
+function idComer(){ return 'c' + Math.random().toString(36).slice(2,9); }
+
+function filaAtraccion(a = {nombre:'',lat:'',lng:'',advertencia:''}){
+  const id = idAtraccion();
+  const div = document.createElement('div');
+  div.className = 'atraccion-row';
+  div.dataset.id = id;
+  div.innerHTML = `
+    <button class="btn-eliminar" onclick="this.parentElement.remove()">Eliminar</button>
+    <label>Nombre</label>
+    <input type="text" class="a-nombre" value="${a.nombre || ''}">
+    <div class="fila-doble">
+      <div><label>Lat</label><input type="text" class="a-lat" value="${a.lat ?? ''}"></div>
+      <div><label>Lng</label><input type="text" class="a-lng" value="${a.lng ?? ''}"></div>
+    </div>
+    <label>Advertencia (opcional, ej. camino de tierra)</label>
+    <input type="text" class="a-advertencia" value="${a.advertencia || ''}">
+  `;
+  document.getElementById('atracciones-lista').appendChild(div);
+}
+
+function filaComer(c = {nombre:'',lat:'',lng:'',nota:''}){
+  const id = idComer();
+  const div = document.createElement('div');
+  div.className = 'comer-row';
+  div.dataset.id = id;
+  div.innerHTML = `
+    <button class="btn-eliminar" onclick="this.parentElement.remove()">Eliminar</button>
+    <label>Nombre</label>
+    <input type="text" class="c-nombre" value="${c.nombre || ''}">
+    <div class="fila-doble">
+      <div><label>Lat</label><input type="text" class="c-lat" value="${c.lat ?? ''}"></div>
+      <div><label>Lng</label><input type="text" class="c-lng" value="${c.lng ?? ''}"></div>
+    </div>
+    <label>Nota</label>
+    <input type="text" class="c-nota" value="${c.nota || ''}">
+  `;
+  document.getElementById('comer-lista').appendChild(div);
+}
+
+function agregarAtraccion(){ filaAtraccion(); }
+function agregarComer(){ filaComer(); }
+
+async function iniciarSesion(){
+  const token = document.getElementById('token-input').value.trim();
+  const errBox = document.getElementById('login-error');
+  errBox.style.display = 'none';
+  if(!token){ return; }
+
+  const { data, error } = await sb
+    .from('guias_bienvenida')
+    .select('*')
+    .eq('token', token)
+    .maybeSingle();
+
+  if(error || !data){
+    errBox.textContent = 'Código incorrecto. Probá de nuevo.';
+    errBox.style.display = 'block';
+    return;
+  }
+
+  registro = data;
+  cargarFormulario(data);
+  document.getElementById('login-box').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+
+function cargarFormulario(data){
+  document.getElementById('titulo-cliente').textContent = 'Guía de bienvenida — ' + data.nombre_cliente;
+  const c = data.contenido || {};
+  document.getElementById('direccion').value = c.direccion || '';
+  document.getElementById('auto').value = (c.como_llegar && c.como_llegar.auto) || '';
+  document.getElementById('bus-precio').value = (c.como_llegar && c.como_llegar.bus_publico && c.como_llegar.bus_publico.precio) || '';
+  document.getElementById('bus-detalle').value = (c.como_llegar && c.como_llegar.bus_publico && c.como_llegar.bus_publico.detalle) || '';
+  document.getElementById('uber-remis').value = (c.como_llegar && c.como_llegar.uber_remis) || '';
+
+  document.getElementById('atracciones-lista').innerHTML = '';
+  (c.atracciones || []).forEach(filaAtraccion);
+
+  document.getElementById('comer-lista').innerHTML = '';
+  (c.donde_comer || []).forEach(filaComer);
+
+  document.getElementById('wifi-red').value = (c.wifi && c.wifi.red) || '';
+  document.getElementById('wifi-clave').value = (c.wifi && c.wifi.clave) || '';
+  document.getElementById('wifi-activo').checked = !!(c.wifi && c.wifi.activo);
+
+  document.getElementById('servicios').value = (c.servicios || []).join('\n');
+}
+
+function leerFormulario(){
+  const atracciones = [...document.querySelectorAll('.atraccion-row')].map(row => ({
+    nombre: row.querySelector('.a-nombre').value.trim(),
+    lat: parseFloat(row.querySelector('.a-lat').value) || null,
+    lng: parseFloat(row.querySelector('.a-lng').value) || null,
+    advertencia: row.querySelector('.a-advertencia').value.trim() || null
+  }));
+
+  const donde_comer = [...document.querySelectorAll('.comer-row')].map(row => ({
+    nombre: row.querySelector('.c-nombre').value.trim(),
+    lat: parseFloat(row.querySelector('.c-lat').value) || null,
+    lng: parseFloat(row.querySelector('.c-lng').value) || null,
+    nota: row.querySelector('.c-nota').value.trim()
+  }));
+
+  return {
+    direccion: document.getElementById('direccion').value.trim(),
+    como_llegar: {
+      auto: document.getElementById('auto').value.trim(),
+      bus_publico: {
+        precio: Number(document.getElementById('bus-precio').value) || 0,
+        detalle: document.getElementById('bus-detalle').value.trim()
+      },
+      uber_remis: document.getElementById('uber-remis').value.trim()
+    },
+    atracciones,
+    donde_comer,
+    wifi: {
+      red: document.getElementById('wifi-red').value.trim(),
+      clave: document.getElementById('wifi-clave').value.trim(),
+      activo: document.getElementById('wifi-activo').checked
+    },
+    servicios: document.getElementById('servicios').value.split('\n').map(s => s.trim()).filter(Boolean)
+  };
+}
+
+async function guardar(){
+  const nuevoContenido = leerFormulario();
+  const msg = document.getElementById('save-msg');
+
+  const { error } = await sb
+    .from('guias_bienvenida')
+    .update({ contenido: nuevoContenido, updated_at: new Date().toISOString() })
+    .eq('id', registro.id)
+    .eq('token', registro.token);
+
+  msg.style.display = 'block';
+  if(error){
+    msg.className = 'msg err';
+    msg.textContent = 'No se pudo guardar. Probá de nuevo.';
+  } else {
+    msg.className = 'msg ok';
+    msg.textContent = 'Guardado ✓';
+    setTimeout(() => { msg.style.display = 'none'; }, 2500);
+  }
+}
+</script>
+</body>
+</html>
