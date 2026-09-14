@@ -1,189 +1,228 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bienvenida</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenido/a</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  :root{ --coral:#FF6F59; --menta:#AEBF92; --carbon:#201E1D; --cream:#FBF7F0; }
-  *{box-sizing:border-box}
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--cream);color:var(--carbon);margin:0}
-  header{padding:28px 20px 16px;text-align:center}
-  header h1{margin:0;font-size:1.5rem}
-  nav{display:flex;overflow-x:auto;gap:6px;padding:0 12px 12px;border-bottom:1px solid #e5ddd0}
-  nav button{flex:0 0 auto;background:none;border:none;padding:8px 14px;border-radius:20px;font-size:.85rem;font-weight:600;color:#777;cursor:pointer}
-  nav button.activo{background:var(--coral);color:#fff}
-  main{padding:20px;max-width:600px;margin:0 auto}
-  section{display:none}
-  section.activa{display:block}
-  .card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-  .card h3{margin:0 0 6px;font-size:1rem}
-  .card a{color:var(--coral);text-decoration:none;font-size:.85rem;font-weight:600}
-  .advertencia{margin-top:8px;background:#fff3e0;color:#8a5a00;padding:8px 10px;border-radius:8px;font-size:.82rem;border-left:3px solid #e0a300}
-  .precio{display:inline-block;background:var(--menta);color:#2f3d1f;padding:2px 10px;border-radius:12px;font-size:.8rem;font-weight:700;margin-top:6px}
-  .wifi-box{background:var(--carbon);color:#fff;border-radius:12px;padding:16px;text-align:center}
-  .wifi-box .clave{font-family:monospace;font-size:1.2rem;letter-spacing:1px}
+  :root{
+    --verde-900:#122019; --verde-700:#1F3A2E; --verde-500:#3B6355;
+    --dorado:#C9A227; --dorado-suave:#E4C97A; --crema:#F8F3E8;
+    --texto:#20261F; --radio:16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--crema);color:var(--texto);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+  .page{max-width:480px;margin:0 auto;min-height:100vh;background:var(--crema);position:relative;padding-bottom:96px;}
+
+  .hero{background:linear-gradient(180deg,var(--verde-900) 0%,var(--verde-700) 100%);color:var(--crema);padding:36px 24px 40px;position:relative;overflow:hidden;}
+  .hero svg.canopy{position:absolute;bottom:-6px;left:0;width:100%;height:auto;opacity:0.5;}
+  .brand{display:flex;align-items:center;gap:8px;font-family:'Fraunces',serif;font-weight:600;font-size:15px;letter-spacing:0.02em;color:var(--dorado-suave);position:relative;z-index:1;}
+  .brand svg{width:20px;height:20px;flex:none;}
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:30px;line-height:1.15;margin:18px 0 10px;position:relative;z-index:1;}
+  .hero p{font-size:15px;line-height:1.5;opacity:0.88;margin:0;max-width:34ch;position:relative;z-index:1;}
+
+  main{padding:22px 20px 0;}
+  .subhead{font-size:12px;text-transform:uppercase;letter-spacing:0.07em;color:var(--dorado);font-weight:700;margin:0 0 10px;}
+  .subhead.mt{margin-top:26px;}
+  .lead{font-size:13.5px;opacity:0.7;margin:0 0 14px;}
+
+  .tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:20px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{flex:none;font-family:'Inter',sans-serif;font-weight:600;font-size:13.5px;padding:9px 16px;border-radius:999px;border:1.5px solid rgba(31,58,46,0.15);background:#fff;color:var(--verde-700);cursor:pointer;white-space:nowrap;}
+  .tab-btn.active{background:var(--verde-700);color:var(--crema);border-color:var(--verde-700);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  .direccion-card{background:var(--verde-900);color:var(--crema);border-radius:var(--radio);padding:16px;font-size:13.5px;line-height:1.55;margin-bottom:14px;}
+
+  .ticket-list{display:flex;flex-direction:column;gap:10px;}
+  .ticket{background:#fff;border-radius:var(--radio);box-shadow:0 1px 2px rgba(18,32,25,0.05);display:flex;gap:12px;padding:14px 16px;align-items:flex-start;border-left:3px solid var(--dorado);}
+  .ticket-icon{flex:none;width:34px;height:34px;border-radius:50%;background:var(--verde-700);display:flex;align-items:center;justify-content:center;color:var(--dorado-suave);}
+  .ticket-icon svg{width:17px;height:17px;}
+  .ticket h3{margin:0 0 2px;font-size:14.5px;font-family:'Inter',sans-serif;font-weight:600;color:var(--verde-900);}
+  .ticket p{margin:0;font-size:13.5px;line-height:1.45;opacity:0.78;}
+  .ticket .links{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;}
+  .ticket .links a{font-size:13px;font-weight:600;color:var(--verde-500);text-decoration:underline;text-underline-offset:2px;}
+  .ticket .advertencia{margin-top:8px;background:#FBEFD9;color:#8a5a00;padding:6px 10px;border-radius:10px;font-size:12.5px;}
+
+  .horarios{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;}
+  .horario-card{background:#fff;border:1px solid rgba(31,58,46,0.08);border-radius:var(--radio);padding:16px 14px;box-shadow:0 1px 2px rgba(18,32,25,0.04);}
+  .kicker{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--verde-500);font-weight:600;}
+  .big{display:block;font-family:'Fraunces',serif;font-size:20px;font-weight:600;margin-top:4px;color:var(--verde-900);}
+
+  section{margin-bottom:30px;}
+
+  .whatsapp-fab{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;max-width:440px;width:calc(100% - 40px);background:var(--verde-900);color:var(--crema);text-decoration:none;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;border-radius:999px;font-weight:600;font-size:14.5px;box-shadow:0 6px 18px rgba(18,32,25,0.28);z-index:5;}
+  .whatsapp-fab svg{width:18px;height:18px;flex:none;}
+  footer{text-align:center;padding:6px 20px 90px;font-size:11px;opacity:0.45;}
+  #estado-carga{padding:40px 20px;text-align:center;opacity:0.6;font-size:14px;}
 </style>
 </head>
 <body>
+<div class="page">
 
-<header>
-  <h1 id="titulo">Bienvenida</h1>
-</header>
-
-<nav id="tabs"></nav>
-
-<main>
-  <section id="tab-llegar" class="activa">
-    <div class="card">
-      <h3>Dirección</h3>
-      <p id="direccion-texto"></p>
+  <header class="hero">
+    <svg class="canopy" viewBox="0 0 480 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,90 L0,55 Q40,20 80,50 Q120,15 160,48 Q200,10 240,45 Q280,12 320,50 Q360,18 400,48 Q440,20 480,52 L480,90 Z" fill="#0E1A14"/>
+    </svg>
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"></circle><path d="M11 12 L20 3 M17 6 l3 3 M14 9 l2 2"></path></svg>
+      LlaveApp
     </div>
-    <div class="card">
-      <h3>En auto</h3>
-      <p id="auto-texto"></p>
-    </div>
-    <div class="card">
-      <h3>Bus público</h3>
-      <span class="precio" id="bus-precio-texto"></span>
-      <p id="bus-detalle-texto"></p>
-    </div>
-    <div class="card">
-      <h3>Uber / remis</h3>
-      <p id="uber-texto"></p>
-    </div>
-  </section>
+    <h1 id="titulo">Bienvenido/a</h1>
+    <p>Todo lo que necesitás para tu estadía. Cualquier duda, estamos a un mensaje de distancia.</p>
+  </header>
 
-  <section id="tab-ver">
-    <div id="atracciones-cards"></div>
-  </section>
+  <main>
+    <div id="estado-carga">Cargando guía...</div>
 
-  <section id="tab-comer">
-    <div id="comer-cards"></div>
-  </section>
+    <div id="contenido" style="display:none">
+      <nav class="tabs" id="tabs"></nav>
 
-  <section id="tab-servicios">
-    <div class="card" id="wifi-card" style="display:none">
-      <div class="wifi-box">
-        <div>Red</div>
-        <div class="clave" id="wifi-red-texto"></div>
-        <div style="margin-top:8px">Clave</div>
-        <div class="clave" id="wifi-clave-texto"></div>
+      <div class="tab-panel active" id="panel-llegar">
+        <section>
+          <p class="subhead">Cómo llegar</p>
+          <div class="direccion-card" id="direccion-texto"></div>
+          <div class="ticket-list" id="como-llegar-lista"></div>
+        </section>
+      </div>
+
+      <div class="tab-panel" id="panel-ver">
+        <section>
+          <p class="lead">Datos orientativos — antes de ir, confirmá horarios y precios vigentes.</p>
+          <div class="ticket-list" id="atracciones-lista"></div>
+        </section>
+      </div>
+
+      <div class="tab-panel" id="panel-comer">
+        <section>
+          <div class="ticket-list" id="comer-lista"></div>
+        </section>
+      </div>
+
+      <div class="tab-panel" id="panel-servicios">
+        <section>
+          <div class="ticket-list" id="servicios-lista"></div>
+          <div id="wifi-section" style="display:none">
+            <p class="subhead mt">WiFi</p>
+            <div class="horarios">
+              <div class="horario-card"><span class="kicker">Red</span><span class="big" id="wifi-red">-</span></div>
+              <div class="horario-card"><span class="kicker">Clave</span><span class="big" id="wifi-clave">-</span></div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
-    <div class="card" id="servicios-card">
-      <h3>Servicios</h3>
-      <ul id="servicios-lista"></ul>
-    </div>
-  </section>
-</main>
+  </main>
+
+  <a class="whatsapp-fab" href="https://wa.me/5493757558957" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 1 1-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.2-.1-1-.4-2-1.2-.7-.7-1.2-1.5-1.4-1.7-.1-.2 0-.4.1-.5l.4-.4c.1-.1.2-.3.2-.4.1-.1 0-.3 0-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.6 2.5 4 3.5.6.2 1 .4 1.3.5.6.2 1.1.1 1.5.1.5-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1-.1-.1-.2-.1-.4-.2z"/></svg>
+    Escribinos por WhatsApp
+  </a>
+
+  <footer id="pie">Guía del huésped · LlaveApp</footer>
+</div>
 
 <script>
-// ---- CONFIG: completar con los datos reales del proyecto ----
+// ---- CONFIG ----
 const SUPABASE_URL = "https://vnfgitgadadjjjciftsa.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_IKbP0ieyJfrtdguY39N7wg_RMjN_CxH";
 const CUENTA_SLUG = "wood-cabin"; // cambiar según el cliente al reusar este archivo
-// ---------------------------------------------------------------
+// -----------------
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+const ICONO_PIN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>`;
+const ICONO_BUS = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 12h18M7 18v2M17 18v2"/></svg>`;
+const ICONO_AUTO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M5 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm14 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM5 17l1.5-6h11L19 17M6.5 11l1-3h9l1 3"/></svg>`;
+const ICONO_COMIDA = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3-2 4-2 7a4 4 0 0 0 8 0c0-2-1-3-1-3s2 2 2 6a7 7 0 0 1-14 0c0-5 4-6 4-10z"/></svg>`;
+const ICONO_CHECK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`;
+
+function ticket(icono, titulo, texto, extraHTML=''){
+  return `<div class="ticket">
+    <div class="ticket-icon">${icono}</div>
+    <div><h3>${titulo}</h3>${texto ? `<p>${texto}</p>` : ''}${extraHTML}</div>
+  </div>`;
+}
+
+function linkMaps(lat, lng){
+  return lat && lng ? `<div class="links"><a href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" target="_blank" rel="noopener">Ver en Google Maps →</a></div>` : '';
+}
+
 const tabs = [
-  { id: 'tab-llegar', label: 'Cómo llegar' },
-  { id: 'tab-ver', label: 'Qué ver' },
-  { id: 'tab-comer', label: 'Dónde comer' },
-  { id: 'tab-servicios', label: 'Servicios' }
+  { id: 'panel-llegar', label: 'Cómo llegar' },
+  { id: 'panel-ver', label: 'Qué ver' },
+  { id: 'panel-comer', label: 'Dónde comer' },
+  { id: 'panel-servicios', label: 'Servicios' }
 ];
 
 function armarTabs(){
   const nav = document.getElementById('tabs');
   tabs.forEach((t, i) => {
     const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (i === 0 ? ' active' : '');
     btn.textContent = t.label;
-    btn.className = i === 0 ? 'activo' : '';
-    btn.onclick = () => mostrarTab(t.id, btn);
+    btn.onclick = () => {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById(t.id).classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    };
     nav.appendChild(btn);
   });
 }
 
-function mostrarTab(id, btnClickeado){
-  document.querySelectorAll('section').forEach(s => s.classList.remove('activa'));
-  document.getElementById(id).classList.add('activa');
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('activo'));
-  btnClickeado.classList.add('activo');
-}
-
-function linkMaps(lat, lng){
-  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-}
-
 function pintar(data){
-  document.getElementById('titulo').textContent = 'Bienvenido a ' + data.nombre_cliente;
+  document.getElementById('titulo').innerHTML = 'Bienvenido/a a<br>' + data.nombre_cliente;
+  document.getElementById('pie').textContent = data.nombre_cliente + ' · Guía del huésped · LlaveApp';
   const c = data.contenido || {};
 
-  document.getElementById('direccion-texto').textContent = c.direccion || '—';
-  document.getElementById('auto-texto').textContent = (c.como_llegar && c.como_llegar.auto) || '—';
+  document.getElementById('direccion-texto').textContent = c.direccion || 'Dirección a confirmar.';
 
-  const bus = (c.como_llegar && c.como_llegar.bus_publico) || {};
-  document.getElementById('bus-precio-texto').textContent = bus.precio ? `$${bus.precio.toLocaleString('es-AR')}` : '—';
-  document.getElementById('bus-detalle-texto').textContent = bus.detalle || '';
+  const cl = c.como_llegar || {};
+  let llegarHTML = '';
+  if(cl.bus_publico && cl.bus_publico.precio){
+    llegarHTML += ticket(ICONO_BUS, `Bus público — $${cl.bus_publico.precio.toLocaleString('es-AR')}`, cl.bus_publico.detalle);
+  }
+  if(cl.uber_remis){ llegarHTML += ticket(ICONO_AUTO, 'Uber / remís', cl.uber_remis); }
+  if(cl.auto){ llegarHTML += ticket(ICONO_AUTO, 'En auto propio', cl.auto); }
+  document.getElementById('como-llegar-lista').innerHTML = llegarHTML;
 
-  document.getElementById('uber-texto').textContent = (c.como_llegar && c.como_llegar.uber_remis) || '—';
+  document.getElementById('atracciones-lista').innerHTML = (c.atracciones || []).map(a =>
+    ticket(ICONO_PIN, a.nombre, null,
+      linkMaps(a.lat, a.lng) + (a.advertencia ? `<div class="advertencia">⚠️ ${a.advertencia}</div>` : '')
+    )
+  ).join('');
 
-  const atraccionesBox = document.getElementById('atracciones-cards');
-  atraccionesBox.innerHTML = '';
-  (c.atracciones || []).forEach(a => {
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.innerHTML = `
-      <h3>${a.nombre}</h3>
-      ${a.lat && a.lng ? `<a href="${linkMaps(a.lat,a.lng)}" target="_blank">Ver en Google Maps →</a>` : ''}
-      ${a.advertencia ? `<div class="advertencia">⚠️ ${a.advertencia}</div>` : ''}
-    `;
-    atraccionesBox.appendChild(div);
-  });
+  document.getElementById('comer-lista').innerHTML = (c.donde_comer || []).map(r =>
+    ticket(ICONO_COMIDA, r.nombre, r.nota, linkMaps(r.lat, r.lng))
+  ).join('');
 
-  const comerBox = document.getElementById('comer-cards');
-  comerBox.innerHTML = '';
-  (c.donde_comer || []).forEach(r => {
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.innerHTML = `
-      <h3>${r.nombre}</h3>
-      ${r.nota ? `<p>${r.nota}</p>` : ''}
-      ${r.lat && r.lng ? `<a href="${linkMaps(r.lat,r.lng)}" target="_blank">Ver en Google Maps →</a>` : ''}
-    `;
-    comerBox.appendChild(div);
-  });
+  let serviciosHTML = (c.servicios || []).map(s => ticket(ICONO_CHECK, s, null)).join('');
+  document.getElementById('servicios-lista').innerHTML = serviciosHTML;
 
   const wifi = c.wifi || {};
   if(wifi.activo){
-    document.getElementById('wifi-card').style.display = 'block';
-    document.getElementById('wifi-red-texto').textContent = wifi.red || '—';
-    document.getElementById('wifi-clave-texto').textContent = wifi.clave || '—';
+    document.getElementById('wifi-section').style.display = '';
+    document.getElementById('wifi-red').textContent = wifi.red || '-';
+    document.getElementById('wifi-clave').textContent = wifi.clave || '-';
   }
-
-  const serviciosLista = document.getElementById('servicios-lista');
-  serviciosLista.innerHTML = '';
-  (c.servicios || []).forEach(s => {
-    const li = document.createElement('li');
-    li.textContent = s;
-    serviciosLista.appendChild(li);
-  });
 }
 
 async function cargar(){
   armarTabs();
-  const { data, error } = await sb
-    .from('guias_bienvenida')
-    .select('*')
-    .eq('cuenta_slug', CUENTA_SLUG)
-    .maybeSingle();
-
+  const { data, error } = await sb.from('guias_bienvenida').select('*').eq('cuenta_slug', CUENTA_SLUG).maybeSingle();
+  document.getElementById('estado-carga').style.display = 'none';
   if(error || !data){
-    document.getElementById('titulo').textContent = 'No se pudo cargar la guía';
+    document.getElementById('estado-carga').style.display = 'block';
+    document.getElementById('estado-carga').textContent = 'No se pudo cargar la guía.';
     return;
   }
+  document.getElementById('contenido').style.display = 'block';
   pintar(data);
 }
 
