@@ -83,14 +83,8 @@
 
   <fieldset>
     <legend>WiFi</legend>
-    <div class="fila-doble">
-      <div><label>Red</label><input type="text" id="wifi-red"></div>
-      <div><label>Clave</label><input type="text" id="wifi-clave"></div>
-    </div>
-    <div class="wifi-toggle">
-      <input type="checkbox" id="wifi-activo">
-      <label style="margin:0">Mostrar WiFi en la guía</label>
-    </div>
+    <div id="wifi-lista"></div>
+    <button class="btn btn-secundario" onclick="agregarWifi()">+ Agregar red WiFi</button>
   </fieldset>
 
   <fieldset>
@@ -152,8 +146,26 @@ function filaComer(c = {nombre:'',lat:'',lng:'',nota:''}){
   document.getElementById('comer-lista').appendChild(div);
 }
 
+function filaWifi(w = {red:'',clave:'',activo:true}){
+  const div = document.createElement('div');
+  div.className = 'atraccion-row';
+  div.innerHTML = `
+    <button class="btn-eliminar" onclick="this.parentElement.remove()">Eliminar</button>
+    <div class="fila-doble">
+      <div><label>Red</label><input type="text" class="w-red" value="${w.red || ''}"></div>
+      <div><label>Clave</label><input type="text" class="w-clave" value="${w.clave || ''}"></div>
+    </div>
+    <div class="wifi-toggle">
+      <input type="checkbox" class="w-activo" ${w.activo !== false ? 'checked' : ''}>
+      <label style="margin:0">Mostrar esta red en la guía</label>
+    </div>
+  `;
+  document.getElementById('wifi-lista').appendChild(div);
+}
+
 function agregarAtraccion(){ filaAtraccion(); }
 function agregarComer(){ filaComer(); }
+function agregarWifi(){ filaWifi(); }
 
 async function iniciarSesion(){
   const token = document.getElementById('token-input').value.trim();
@@ -194,9 +206,10 @@ function cargarFormulario(data){
   document.getElementById('comer-lista').innerHTML = '';
   (c.donde_comer || []).forEach(filaComer);
 
-  document.getElementById('wifi-red').value = (c.wifi && c.wifi.red) || '';
-  document.getElementById('wifi-clave').value = (c.wifi && c.wifi.clave) || '';
-  document.getElementById('wifi-activo').checked = !!(c.wifi && c.wifi.activo);
+  document.getElementById('wifi-lista').innerHTML = '';
+  let redesWifi = c.wifi || [];
+  if(!Array.isArray(redesWifi)) redesWifi = redesWifi.red ? [redesWifi] : [];
+  redesWifi.forEach(filaWifi);
 
   document.getElementById('servicios').value = (c.servicios || []).join('\n');
 }
@@ -228,11 +241,11 @@ function leerFormulario(){
     },
     atracciones,
     donde_comer,
-    wifi: {
-      red: document.getElementById('wifi-red').value.trim(),
-      clave: document.getElementById('wifi-clave').value.trim(),
-      activo: document.getElementById('wifi-activo').checked
-    },
+    wifi: [...document.querySelectorAll('#wifi-lista .atraccion-row')].map(row => ({
+      red: row.querySelector('.w-red').value.trim(),
+      clave: row.querySelector('.w-clave').value.trim(),
+      activo: row.querySelector('.w-activo').checked
+    })).filter(w => w.red),
     servicios: document.getElementById('servicios').value.split('\n').map(s => s.trim()).filter(Boolean)
   };
 }

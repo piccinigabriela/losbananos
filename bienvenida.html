@@ -109,10 +109,7 @@
           <div class="ticket-list" id="servicios-lista"></div>
           <div id="wifi-section" style="display:none">
             <p class="subhead mt">WiFi</p>
-            <div class="horarios">
-              <div class="horario-card"><span class="kicker">Red</span><span class="big" id="wifi-red">-</span></div>
-              <div class="horario-card"><span class="kicker">Clave</span><span class="big" id="wifi-clave">-</span></div>
-            </div>
+            <div id="wifi-redes"></div>
           </div>
         </section>
       </div>
@@ -205,11 +202,17 @@ function pintar(data){
   let serviciosHTML = (c.servicios || []).map(s => ticket(ICONO_CHECK, s, null)).join('');
   document.getElementById('servicios-lista').innerHTML = serviciosHTML;
 
-  const wifi = c.wifi || {};
-  if(wifi.activo){
+  let redesWifi = c.wifi || [];
+  if(!Array.isArray(redesWifi)) redesWifi = redesWifi.red ? [redesWifi] : [];
+  redesWifi = redesWifi.filter(w => w.activo && w.red);
+  if(redesWifi.length){
     document.getElementById('wifi-section').style.display = '';
-    document.getElementById('wifi-red').textContent = wifi.red || '-';
-    document.getElementById('wifi-clave').textContent = wifi.clave || '-';
+    document.getElementById('wifi-redes').innerHTML = redesWifi.map(w => `
+      <div class="horarios">
+        <div class="horario-card"><span class="kicker">Red</span><span class="big">${w.red || '-'}</span></div>
+        <div class="horario-card"><span class="kicker">Clave</span><span class="big">${w.clave || '-'}</span></div>
+      </div>
+    `).join('');
   }
 }
 
